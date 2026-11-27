@@ -1,0 +1,10 @@
+# paths below are fresh-machine defaults, `theme` sets the real ones at runtime
+
+[wallpaper]
+fill_mode = "crop"
+transition = ["fade"]
+transition_duration = 700
+directory = "~/Pictures/wallpapers/ultra-dark"
+
+[wallpaper.default]
+path = "~/Pictures/wallpapers/ultra-dark/fuji-frame.jpg"

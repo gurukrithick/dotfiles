@@ -1,0 +1,97 @@
+# Yazi theme configuration
+# https://yazi-rs.github.io/docs/configuration/theme
+#
+# colours come from flavors/noctalia.yazi/, a colour set here would override it
+
+[flavor]
+dark = "noctalia"
+light = "noctalia"
+
+[mgr]
+preview_hovered = { underline = true }
+tab_width = 1
+border_symbol = "│"
+
+[status]
+separator_open = ""
+separator_close = ""
+
+[input]
+selected = { reversed = true }
+
+[which]
+separator = " → "
+separator_style = {}
+
+# own icons, ahead of the flavor's accent-tinted ones
+[icon]
+prepend_exts = [
+	# Programming languages
+	{ name = "rs", text = "", fg = "lightred" },
+	{ name = "go", text = "", fg = "cyan" },
+	{ name = "py", text = "", fg = "yellow" },
+	{ name = "js", text = "", fg = "yellow" },
+	{ name = "ts", text = "", fg = "blue" },
+	{ name = "jsx", text = "", fg = "cyan" },
+	{ name = "tsx", text = "", fg = "blue" },
+	{ name = "lua", text = "", fg = "blue" },
+	{ name = "sh", text = "", fg = "green" },
+	{ name = "zsh", text = "", fg = "green" },
+	{ name = "bash", text = "", fg = "green" },
+	{ name = "vim", text = "", fg = "green" },
+	{ name = "c", text = "", fg = "blue" },
+	{ name = "cpp", text = "", fg = "blue" },
+	{ name = "h", text = "", fg = "magenta" },
+	{ name = "java", text = "", fg = "red" },
+	{ name = "rb", text = "", fg = "red" },
+	{ name = "php", text = "", fg = "magenta" },
+	{ name = "swift", text = "", fg = "lightred" },
+	{ name = "kt", text = "", fg = "lightred" },
+	# Config files
+	{ name = "json", text = "", fg = "yellow" },
+	{ name = "yaml", text = "", fg = "red" },
+	{ name = "yml", text = "", fg = "red" },
+	{ name = "toml", text = "", fg = "white" },
+	{ name = "ini", text = "", fg = "white" },
+	{ name = "conf", text = "", fg = "white" },
+	# Documents
+	{ name = "md", text = "", fg = "blue" },
+	{ name = "txt", text = "", fg = "white" },
+	{ name = "pdf", text = "", fg = "red" },
+	# Media
+	{ name = "png", text = "", fg = "magenta" },
+	{ name = "jpg", text = "", fg = "magenta" },
+	{ name = "jpeg", text = "", fg = "magenta" },
+	{ name = "gif", text = "", fg = "magenta" },
+	{ name = "svg", text = "", fg = "magenta" },
+	{ name = "mp3", text = "", fg = "yellow" },
+	{ name = "mp4", text = "", fg = "yellow" },
+	{ name = "mkv", text = "", fg = "yellow" },
+	# Archives
+	{ name = "zip", text = "", fg = "red" },
+	{ name = "tar", text = "", fg = "red" },
+	{ name = "gz", text = "", fg = "red" },
+	{ name = "7z", text = "", fg = "red" },
+	{ name = "rar", text = "", fg = "red" },
+	# Lock files
+	{ name = "lock", text = "", fg = "darkgray" },
+]
+prepend_files = [
+	# Config files
+	{ name = ".gitignore", text = "", fg = "lightred" },
+	{ name = ".gitconfig", text = "", fg = "lightred" },
+	{ name = "Dockerfile", text = "", fg = "cyan" },
+	# Lock files
+	{ name = "package-lock.json", text = "", fg = "darkgray" },
+	{ name = "yarn.lock", text = "", fg = "darkgray" },
+	{ name = "pnpm-lock.yaml", text = "", fg = "darkgray" },
+	# Special files
+	{ name = "Makefile", text = "", fg = "white" },
+]
+prepend_globs = [
+	# Config files
+	{ url = "docker-compose*.yml", text = "", fg = "cyan" },
+	# Special files
+	{ url = "LICENSE*", text = "", fg = "yellow" },
+	{ url = "README*", text = "", fg = "blue" },
+]

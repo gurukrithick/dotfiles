@@ -1,0 +1,4 @@
+[screencast]
+max_fps=60
+chooser_type=dmenu
+chooser_cmd=$HOME/.local/bin/share-picker

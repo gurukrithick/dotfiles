@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Screen-share chooser for xdg-desktop-portal-wlr (chooser_type=dmenu).
+# Falls back to slurp (monitors only) when Noctalia is down.
+
+set -euo pipefail
+
+options=$(cat)
+
+# cancel and "not running" both exit 1, so check the process
+if pgrep -x noctalia >/dev/null; then
+    # an open launcher makes Noctalia reject the picker
+    noctalia msg panel-close launcher >/dev/null 2>&1 || true
+    sleep 0.2
+    noctalia dmenu -p "Share" <<<"$options"
+else
+    output=$(slurp -f '%o' -or)
+    grep -m1 -F "Monitor: $output " <<<"$options"
+fi

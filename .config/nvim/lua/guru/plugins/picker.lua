@@ -1,0 +1,69 @@
+
+local function find()
+	require("guru.find").files()
+end
+
+local fzf = {
+	"ibhagwan/fzf-lua",
+	dependencies = { "echasnovski/mini.icons" },
+	cmd = "FzfLua",
+	init = function()
+		vim.ui.select = function(items, opts, on_choice)
+			require("fzf-lua").register_ui_select()
+			vim.ui.select(items, opts, on_choice)
+		end
+	end,
+	opts = {
+		"default",
+		files = { hidden = true },
+		grep = { hidden = true },
+		keymap = {
+			builtin = { ["<C-d>"] = "preview-page-down", ["<C-u>"] = "preview-page-up" },
+			fzf = {
+				["ctrl-d"] = "preview-page-down",
+				["ctrl-u"] = "preview-page-up",
+				["ctrl-q"] = "select-all+accept", -- to quickfix
+			},
+		},
+	},
+	keys = {
+		{ "<leader>fz", "<cmd>FzfLua zoxide<cr>", desc = "Find project directory" },
+		{ '<leader>f"', "<cmd>FzfLua registers<cr>", desc = "Registers" },
+		{ "<leader>fj", "<cmd>FzfLua jumps<cr>", desc = "Jump history" },
+		{ "<leader>fc", "<cmd>FzfLua changes<cr>", desc = "Change history" },
+		{ "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Find keymaps" },
+		{ "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
+		{ "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
+		{ "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help tags" },
+		{ "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent files" },
+		{ "<leader>fw", "<cmd>FzfLua grep_cword<cr>", desc = "Find word under cursor" },
+		{ "<leader>fd", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Diagnostics" },
+		{ "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Document symbols" },
+		{ "<leader>fR", "<cmd>FzfLua resume<cr>", desc = "Resume last picker" },
+		{ "<leader>/", "<cmd>FzfLua blines<cr>", desc = "Fuzzy find in buffer" },
+		{ "<leader>gc", "<cmd>FzfLua git_commits<cr>", desc = "Git commits" },
+		{ "<leader>gs", "<cmd>FzfLua git_status<cr>", desc = "Git status" },
+	},
+}
+
+return {
+	fzf,
+
+	{
+		"dmtrKovalenko/fff",
+		build = function()
+			require("fff.download").download_or_build_binary()
+		end,
+		lazy = false, -- it initialises itself, and indexes on the first search
+		opts = {
+			prompt = "\u{f0349} ",
+			title = "Files",
+			lazy_sync = true,
+			layout = { prompt_position = "top" },
+		},
+		keys = {
+			{ "<leader>ff", find, desc = "Find files" },
+			{ "<C-p>", find, desc = "Find files" },
+		},
+	},
+}

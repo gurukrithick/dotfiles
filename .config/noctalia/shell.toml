@@ -1,0 +1,105 @@
+# ~/.local/state/noctalia/settings.toml loads last and wins over these files
+
+[shell]
+font_family = "Maple Mono NF"
+setup_wizard_enabled = false
+polkit_agent = false
+clipboard_enabled = true
+date_format = "%A, %d %B"
+corner_radius_scale = 1.0
+card_borders = false
+
+# accessibility
+[accessibility]
+ui_scale = 1.1
+
+[shell.animation]
+enabled = true
+speed = 0.9
+
+[shell.shadow]
+direction = "down"
+alpha = 0.32
+
+[shell.panel]
+transparency_mode = "glass"
+control_center_placement = "floating"
+wallpaper_placement = "floating"
+session_placement = "floating"
+session_position = "center"
+floating_offset = 8
+
+# launcher (Super+D)
+[shell.launcher]
+search_position = "top"
+width = 700
+
+# dashboard (Super+C)
+[control_center]
+show_shortcut_labels = false
+
+[weather]
+enabled = false
+
+# toasts and OSD
+[notification]
+follow_focused_output = true
+background_opacity = 0.85
+offset_x = 8
+offset_y = 8
+
+[osd]
+follow_focused_output = true
+background_opacity = 0.85
+# vertical offsets live in the bar layouts, a value here would override them
+
+# locking and idle stay with swayidle + swaylock from mango
+[lockscreen]
+enabled = false
+lock_before_suspend = false
+
+[idle.behavior.lock]
+action = "lock"
+enabled = false
+
+[idle.behavior.screen-off]
+action = "screen_off"
+enabled = false
+
+[idle.behavior.lock-and-suspend]
+action = "lock_and_suspend"
+enabled = false
+
+# session menu (Super+Ctrl+Q)
+[[shell.session.actions]]
+action = "command"
+label = "Lock"
+glyph = "lock"
+command = "swaylock -f -C ~/.config/swaylock/config"
+
+[[shell.session.actions]]
+action = "command"
+label = "Suspend"
+glyph = "zzz"
+command = "swaylock -f -C ~/.config/swaylock/config && systemctl suspend"
+
+[[shell.session.actions]]
+action = "logout"
+command = "mmsg dispatch quit"
+
+[[shell.session.actions]]
+action = "reboot"
+
+[[shell.session.actions]]
+action = "shutdown"
+variant = "outline"
+
+# stdout widget renders scripts/pomodoro-widget, local copy avoids a first-run fetch
+[plugins]
+enabled = ["tordex/stdout", "guru/themes"]
+
+[[plugins.source]]
+name = "desktop-widgets"
+kind = "path"
+location = "~/.config/noctalia/plugins"
+enabled = true

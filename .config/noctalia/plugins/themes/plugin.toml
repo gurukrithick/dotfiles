@@ -1,0 +1,23 @@
+id = "guru/themes"
+name = "Themes"
+version = "2.0.0"
+plugin_api = 52
+author = "guru"
+license = "MIT"
+icon = "palette"
+description = "A carousel of every theme's wallpapers that applies the one you settle on."
+
+# toggle with `noctalia msg plugin guru/themes:switcher all toggle`
+[[service]]
+id = "switcher"
+entry = "service.luau"
+
+# overlay
+[[layer]]
+id = "carousel"
+entry = "carousel.luau"
+layer = "overlay"
+anchors = ["top", "bottom", "left", "right"]
+exclusive_zone = -1
+keyboard = "exclusive"
+output = "focused"

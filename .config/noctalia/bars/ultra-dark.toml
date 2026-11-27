@@ -1,0 +1,124 @@
+# Ultra Dark
+
+[bar]
+order = ["default"]
+
+[bar.default]
+position = "top"
+thickness = 40
+margin_edge = 12
+margin_ends = "20%"
+padding = 16
+widget_spacing = 20
+background_opacity = 1.0
+border = "outline_variant"
+border_width = 1.0
+radius = 14
+concave_edge_corners = false
+shadow = false
+scale = 1.15
+font_scale = 0.95
+font_weight = 500
+color = "on_surface_variant"
+capsule = false
+
+start = ["workspaces", "media"]
+center = ["group:time"]
+end = ["privacy", "group:status", "dashboard", "tray"]
+
+[bar.default.dead_zone]
+click_through = true
+
+[[bar.default.capsule_group]]
+id = "time"
+members = ["clock", "pomodoro"]
+fill = "surface_container"
+border = ""
+radius = 8
+padding = 10
+widget_spacing = 10
+
+# status
+[[bar.default.capsule_group]]
+id = "status"
+members = ["volume", "network", "battery", "caffeine"]
+opacity = 0.0
+border = ""
+padding = 0.0
+widget_spacing = 12
+
+# tags
+[widget.workspaces]
+style = "regular"
+show_labels = false
+hide_when_empty = true
+pill_scale = 0.5
+active_pill_size = 2.4
+focused_color = "primary"
+occupied_color = "on_surface_variant"
+empty_color = "outline_variant"
+urgent_color = "error"
+
+# focus timer, middle-click the clock to start
+[widget.pomodoro]
+type = "tordex/stdout:bar"
+cmd = "~/.config/noctalia/scripts/pomodoro-widget quiet"
+interval = 1
+interval_units = "1"
+json = true
+
+[widget.pomodoro.actions]
+left = "exec ~/.config/noctalia/scripts/pomodoro start"
+right = "exec ~/.config/noctalia/scripts/pomodoro toggle"
+middle = "exec ~/.config/noctalia/scripts/pomodoro reset"
+scroll_up = "exec ~/.config/noctalia/scripts/pomodoro add"
+scroll_down = "exec ~/.config/noctalia/scripts/pomodoro sub"
+
+# track title
+[widget.media]
+hide_when_no_media = true
+hide_artist = true
+art_size = 18
+min_length = 0
+max_length = 220 # Maple Mono is wide
+title_scroll = "on_hover"
+color = "on_surface_variant"
+
+[widget.clock]
+format = "{:%H:%M}"
+timezone = "Asia/Kolkata"
+color = "on_surface"
+font_weight = 700
+tooltip_format = "{:%A, %d %B %Y}"
+
+[widget.clock.actions]
+left = "panel-toggle control-center calendar"
+middle = "exec ~/.config/noctalia/scripts/pomodoro start"
+
+[widget.privacy]
+hide_inactive = true
+active_color = "error"
+
+[widget.volume]
+show_label = false
+peek = true
+mute_color = "on_surface_variant"
+
+[widget.network]
+show_label = false
+
+[widget.battery]
+display_mode = "glyph"
+show_label = true
+
+[widget.dashboard]
+type = "control-center"
+glyph = "adjustments-horizontal"
+
+[widget.tray]
+drawer = true
+icon_type = "symbolic"
+colorize_icons = true
+
+[osd]
+offset_y = 8

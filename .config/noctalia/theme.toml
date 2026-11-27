@@ -1,0 +1,53 @@
+# `theme` (~/.local/bin/theme) switches palettes at runtime, this one is only the first-run default
+
+[theme]
+# `theme` forces dark for Ultra Dark
+mode = "dark"
+source = "custom"
+custom_palette = "ultra-dark"
+terminal_colors = "standard"
+
+# built-in templates: kitty, GTK, Qt, btop, KDE (kdeglobals; Okular needs qt6ct-kde)
+[theme.templates]
+enable_builtin_templates = true
+builtin_ids = ["kitty", "gtk3", "gtk4", "qt", "kcolorscheme", "btop"]
+# community templates: bat (delta uses it too)
+enable_community_templates = true
+community_ids = ["bat"]
+
+# palette slots that yazi, fzf, fastfetch and delta use; the hook reloads kitty again
+# in case the built-in kitty template ran first
+[theme.templates.user.kitty-roles]
+input_path = "templates/kitty-roles.conf"
+output_path = "$XDG_CONFIG_HOME/kitty/themes/noctalia-roles.conf"
+post_hook = "pkill -USR1 -x kitty || true"
+
+# yazi preview syntax colours, syntect needs hex
+[theme.templates.user.yazi-syntax]
+input_path = "templates/yazi.tmTheme"
+output_path = "$XDG_CONFIG_HOME/yazi/flavors/noctalia.yazi/tmtheme.xml"
+
+# trimmed copy, the built-in "mango" template writes keys this Mango lacks.
+# Once Mango knows title_message_bar_*: drop this, use builtin "mango", make
+# source_optional= in mango/config.conf a plain source=
+[theme.templates.user.mango]
+input_path = "templates/mango.conf"
+output_path = "$XDG_CONFIG_HOME/mango/noctalia.conf"
+
+# fastfetch sprite accent, pokesprite runs in the background
+[theme.templates.user.accent]
+input_path = "templates/accent"
+output_path = "$XDG_STATE_HOME/theme/accent"
+post_hook = 'p="$HOME/.local/bin/pokesprite"; [ ! -x "$p" ] || "$p" sync "{{ colors.primary.default.hex }}" >/dev/null 2>&1 &'
+
+# palette variables only
+[theme.templates.user.tmux]
+input_path = "templates/tmux.conf"
+output_path = "$XDG_CONFIG_HOME/tmux/themes/noctalia.conf"
+post_hook = 'bash "$HOME/.config/noctalia/templates/tmux-reload"'
+
+# see nvim/lua/guru/theme.lua; nvim ignores SIGUSR1 unless that config is loaded
+[theme.templates.user.nvim]
+input_path = "templates/nvim.lua"
+output_path = "$XDG_CONFIG_HOME/nvim/colors/base16-noctalia.lua"
+post_hook = "pkill -USR1 -x nvim || true"

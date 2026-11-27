@@ -1,0 +1,112 @@
+#!/usr/bin/env -S python3 -S
+"""Colour-matched Pokemon sprite for fastfetch.
+
+  pokesprite sync <#rrggbb>   map accent to PokeAPI colours, cache all their sprites
+
+Sprites are cached in ${XDG_CACHE_HOME:-~/.cache}/pokesprite/<colour>/<id>.png.
+"""
+import os, sys
+
+CACHE = os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"), "pokesprite")
+TABLE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../.config/fastfetch/pokemon-colors.tsv")
+URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/%d.png"
+SCALE = 3
+FAMILY = {
+    "black": ("black", "gray"),
+    "blue": ("blue", "purple"),
+    "gray": ("gray", "black", "white"),
+    "green": ("green", "yellow"),
+    "pink": ("pink", "purple", "red"),
+    "purple": ("purple", "pink", "blue"),
+    "red": ("red", "pink", "brown"),
+    "white": ("white", "gray"),
+    "yellow": ("yellow", "brown"),
+}
+
+
+def category(hexcolor):
+    import colorsys
+    r, g, b = (int(hexcolor.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    if s < 0.2 or l < 0.12 or l > 0.92:
+        return "black" if l < 0.2 else "white" if l >= 0.85 else "gray"
+    h *= 360
+    for limit, name in ((25, "red"), (70, "yellow"), (165, "green"), (255, "blue"),
+                        (300, "purple"), (340, "pink")):
+        if h < limit:
+            return name
+    return "red"
+
+
+def run(*cmd):
+    import subprocess
+    return subprocess.run(cmd, capture_output=True, stdin=subprocess.DEVNULL, timeout=20).stdout
+
+
+def process(png, out):  # png, out: Path
+    """Trim the transparent border, upscale nearest-neighbour."""
+    quiet = ["ffmpeg", "-v", "error", "-y", "-i", str(png)]
+    pgm = run(*quiet, "-vf", "format=rgba,alphaextract,format=gray", "-f", "image2pipe", "-c", "pgm", "-")
+    w, h = map(int, pgm.split(b"\n", 3)[1].split())
+    px = pgm[-w * h:]
+    xs = [i % w for i, v in enumerate(px) if v]
+    ys = [i // w for i, v in enumerate(px) if v]
+    crop = f"crop={max(xs)-min(xs)+1}:{max(ys)-min(ys)+1}:{min(xs)}:{min(ys)}," if xs else ""
+    run(*quiet, "-vf", f"format=rgba,{crop}scale=iw*{SCALE}:ih*{SCALE}:flags=neighbor", str(out))
+
+
+def sync(hexcolor):
+    import fcntl, random
+    from pathlib import Path
+    from urllib.error import HTTPError
+    from urllib.request import urlopen
+    from concurrent.futures import ThreadPoolExecutor
+    cats = FAMILY[category(hexcolor)]
+    cache = Path(CACHE)
+    for cat in cats:
+        (cache / cat).mkdir(parents=True, exist_ok=True)
+    (cache / ".current").write_text(" ".join(cats) + "\n")
+    os.replace(cache / ".current", cache / "current")
+    print(*cats)
+
+    os.nice(10)
+    lock = open(cache / ".lock", "w")
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    rows = (l.split("\t") for l in Path(TABLE).read_text().splitlines() if not l.startswith("#"))
+    todo = [(int(i), cache / cat) for i, _, cat in rows
+            if cat in cats and not (cache / cat / f"{i}.png").exists()]
+    random.shuffle(todo)
+    offline = []
+
+    def fetch(job):
+        i, d = job
+        if offline:
+            return
+        try:
+            raw = urlopen(URL % i, timeout=10).read()
+        except HTTPError as e:
+            if e.code != 404:  # rate limited or broken: the next sync goes on
+                offline.append(i)
+            return
+        except Exception:
+            offline.append(i)
+            return
+        try:
+            tmp = d / f".{i}.src"
+            tmp.write_bytes(raw)
+            process(tmp, d / f".{i}.png")  # same dir, so the rename is atomic
+            os.replace(d / f".{i}.png", d / f"{i}.png")
+        except Exception:
+            pass  # bad sprite: skip it
+        finally:
+            tmp.unlink(missing_ok=True)
+
+    with ThreadPoolExecutor(6) as ex:
+        list(ex.map(fetch, todo))
+
+
+if __name__ == "__main__":
+    if sys.argv[1:2] == ["sync"] and len(sys.argv) == 3:
+        sync(sys.argv[2])
+    else:
+        sys.exit("usage: pokesprite sync <#rrggbb>")

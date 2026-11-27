@@ -1,0 +1,12 @@
+# Noctalia inherits Mango's PATH, which lacks ~/.local/bin
+
+[hooks]
+# recreate the bar.toml link after a fresh checkout
+started = '"$HOME/.local/bin/theme" sync-bar'
+# per-theme wallpaper memory, runs once per monitor; then copy the look to the login greeter
+wallpaper_changed = [
+    '"$HOME/.local/bin/theme" remember "$NOCTALIA_WALLPAPER_PATH"',
+    'noctalia msg greeter-sync',
+]
+# theme switches change colours without touching the wallpaper
+colors_changed = 'noctalia msg greeter-sync'

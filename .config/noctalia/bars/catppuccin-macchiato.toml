@@ -1,0 +1,147 @@
+# Catppuccin Macchiato, after Cozytile
+
+[bar]
+order = ["default"]
+
+[bar.default]
+position = "top"
+thickness = 40
+margin_edge = 8
+margin_ends = 8
+padding = 6
+widget_spacing = 6
+background_opacity = 1.0
+border = "outline_variant"
+border_width = 1.0
+radius = 12
+concave_edge_corners = false
+shadow = false
+scale = 1.35
+font_scale = 0.85
+font_weight = 500
+capsule = true
+capsule_thickness = 0.7
+capsule_fill = "surface_container"
+capsule_border = ""
+capsule_radius = 6
+capsule_padding = 9
+
+start = ["launcher", "workspaces", "search", "media"]
+center = []
+end = ["tray", "privacy", "ram", "group:status", "group:tools", "group:time"]
+
+[[bar.default.capsule_group]]
+id = "time"
+members = ["pomodoro", "clock"]
+fill = "surface_container"
+border = ""
+padding = 9.0
+radius = 6.0
+widget_spacing = 10
+
+# chips
+[[bar.default.capsule_group]]
+id = "status"
+members = ["volume", "battery"]
+fill = "surface_container"
+border = ""
+padding = 9.0
+radius = 6.0
+widget_spacing = 12
+
+[[bar.default.capsule_group]]
+id = "tools"
+members = ["powerboost", "caffeine"]
+fill = "surface_container"
+border = ""
+padding = 9.0
+radius = 6.0
+widget_spacing = 12
+
+[widget.launcher]
+glyph = "grid-dots"
+color = "primary"
+
+# tags
+[widget.workspaces]
+style = "regular"
+show_labels = false
+hide_when_empty = false
+pill_scale = 0.6
+active_pill_size = 2.0
+focused_color = "primary"
+occupied_color = "on_surface_variant"
+empty_color = "#6e738d" # overlay0
+urgent_color = "error"
+
+[widget.search]
+type = "custom_button"
+glyph = "search"
+label = "Search"
+
+[widget.search.actions]
+left = "panel-toggle launcher"
+
+[widget.media]
+hide_when_no_media = true
+art_size = 20
+max_length = 260
+title_scroll = "on_hover"
+color = "on_surface_variant"
+
+[widget.privacy]
+hide_inactive = true
+active_color = "error"
+
+[widget.ram]
+type = "sysmon"
+stat = "ram_used"
+visualization = "none"
+
+[widget.battery]
+display_mode = "glyph"
+show_label = true
+
+[widget.volume]
+show_label = false
+mute_color = "on_surface_variant"
+
+[widget.pomodoro]
+type = "tordex/stdout:bar"
+cmd = "~/.config/noctalia/scripts/pomodoro-widget quiet"
+interval = 1
+interval_units = "1"
+json = true
+
+[widget.pomodoro.actions]
+left = "exec ~/.config/noctalia/scripts/pomodoro start"
+right = "exec ~/.config/noctalia/scripts/pomodoro toggle"
+middle = "exec ~/.config/noctalia/scripts/pomodoro reset"
+scroll_up = "exec ~/.config/noctalia/scripts/pomodoro add"
+scroll_down = "exec ~/.config/noctalia/scripts/pomodoro sub"
+
+[widget.clock]
+format = "{:%H:%M}"
+timezone = "Asia/Kolkata"
+font_weight = 700
+tooltip_format = "{:%A, %d %B %Y}"
+
+[widget.clock.actions]
+left = "panel-toggle control-center home"
+middle = "exec ~/.config/noctalia/scripts/pomodoro start"
+
+# follows power-profiles-daemon, profile changes go through the boost script
+[widget.powerboost]
+type = "power_profile"
+
+[widget.powerboost.actions]
+left = "exec ~/.local/bin/powerboost toggle"
+right = "exec ~/.local/bin/powerboost toggle"
+scroll_up = "none"
+scroll_down = "none"
+
+[widget.tray]
+drawer = true
+
+[osd]
+offset_y = 8

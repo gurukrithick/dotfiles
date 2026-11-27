@@ -1,0 +1,2 @@
+# new window from Super+Return, .zshrc greets it with fastfetch
+launch --env KITTY_GREET=1
